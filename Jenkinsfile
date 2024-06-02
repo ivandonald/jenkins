@@ -26,7 +26,7 @@ pipeline{
         }
         stage("Deploy") {
             steps{
-                sh "docker-compose down && docker-compose up -d"
+                sh "docker run -dp 8001:8001 $DOCKER_USERNAME/django-todo-app:latest "
             }
         }
     }
