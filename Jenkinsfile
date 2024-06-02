@@ -1,9 +1,9 @@
 pipeline{
-    agent {label "dev"}
+    agent {label "jenkins-agent"}
     stages{
         stage("Clone Code"){
             steps{
-                git url: "https://github.com/neelsoni26/react_django_demo_app", branch: "main"
+                git url: "https://github.com/ivandonald/jenkins.git", branch: "main"
             }
         }
         stage("Build and Test") {
@@ -14,12 +14,12 @@ pipeline{
         stage("Login and Push image")
         {
             steps{
-                withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"dockerhubPassword",usernameVariable:"dockerhubUsername")]){
+                withCredentials([usernamePassword(credentialsId:"dockerhub",passwordVariable:"DOCKER_PASSWORD",usernameVariable:"DOCKER_USERNAME")]){
                     sh """
                     #!/bin/sh
-                    docker tag django-todo-app ${env.dockerhubUsername}/django-todo-app:latest
-                    docker login -u ${env.dockerhubUsername} -p ${env.dockerhubPassword}
-                    docker push ${env.dockerhubUsername}/django-todo-app:latest
+                    docker tag django-todo-app $DOCKER_USERNAME/django-todo-app:latest
+                    docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                    docker push $DOCKER_USERNAME/django-todo-app:latest
                     """
                 }
             }
